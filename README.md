@@ -10,6 +10,6 @@
 
 <p align="left">
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=java,spring,js,react,vue,go,mysql,redis,kafka,docker,linux,git&perline=6" alt="My Skills" />
+    <img src="https://skillicons.dev/icons?i=java,spring,js,react,vue,go,mysql,redis,kafka,docker,linux,git&perline=12" alt="My Skills" />
   </a>
 </p>
