@@ -1,15 +1,7 @@
-<div align="center">
-  <a href="https://github.com/Nahiyi">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=27AE60&width=450&lines=Hi+there,+a+passionate+Full+Stack+Developer;Proficient+in+Frontend+%26+Backend;Passionate+about+Software+Architecture" alt="Typing SVG" />
-  </a>
-</div>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Nahiyi/Nahiyi/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Nahiyi/Nahiyi/output/github-contribution-grid-snake.svg">
+  <img alt="snake" src="https://raw.githubusercontent.com/Nahiyi/Nahiyi/output/github-contribution-grid-snake.svg">
+</picture>
 
-<br/>
-
-### Tech Stack
-
-<p align="left">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=java,spring,js,react,vue,go,mysql,redis,kafka,docker,linux,git&perline=12" alt="My Skills" />
-  </a>
-</p>
+_generated with [Platane/snk](https://github.com/Platane/snk)_
