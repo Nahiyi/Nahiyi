@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间流逝计算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            position: relative;
+            line-height: 1.6;
+            padding: 20px 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            z-index: 10;
+            max-width: 900px;
+            width: 90%;
+            background: rgba(15, 12, 41, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 20px 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #ff8a00, #e52e71, #22c1c3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 138, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: #a0a0d0;
+        }
+
+        .age-container,
+        .seconds-container {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .age-display,
+        .seconds-display {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(90deg, #ffffff, #a5f8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(165, 248, 255, 0.5);
+        }
+
+        .decimal-explanation {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #aaa;
+            flex-wrap: wrap;
+        }
+
+        .decimal-marker {
+            color: #ff8a00;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 极0.08);
+        }
+
+        .info-card h3 {
+            font-size: 1rem;
+            color: #a0a0d0;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .birthdate {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10极px;
+            background-color: #ff8a00;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        footer {
+            margin-top: 1.5rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .seconds-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #a0a0d0;
+        }
+
+        .seconds-explanation {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 1rem;
+        }
+
+        .seconds-decimal {
+            display: inline-block;
+            min-width: 2.4em;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <h1>逝者如川，不舍昼夜</h1>
+        <p class="subtitle">您的年龄精确到小数点后12位 · 秒数精确到小数点后4位</p>
+
+        <div class="age-container">
+            <p>您当前的年龄是：</p>
+            <div class="age-display" id="ageDisplay">
+                <span class="age-integer">--</span>.<span class="age-decimal">------------</span>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>当前日期</h3>
+                <p id="currentDate">2023年11月15日</p>
+            </div>
+            <div class="info-card">
+                <h3>当前时间</h3>
+                <p id="currentTime">00:00:00 <span class="pulse"></span></p>
+            </div>
+            <div class="info-card">
+                <h3>已存活天数</h3>
+                <p id="livedDays">0 天</极p>
+            </div>
+        </div>
+
+        <div class="seconds-container">
+            <p class="seconds-title">您已存活的秒数是：</p>
+            <div class="seconds-display" id="secondsDisplay">
+                <span class="seconds-integer">--</span>.<span class="seconds-decimal">----</span>
+            </div>
+            <div class="seconds-explanation">
+                精确到小数点后4位（0.1毫秒级）
+            </div>
+        </div>
+
+        <footer>
+            <p>设计制作: 时间流逝计算器 · 每秒更新 · 年龄精确到皮秒级 · 秒数精确到0.1毫秒级</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: "#ffffff"
+                },
+                shape: {
+                    type: "circle"
+                },
+                opacity: {
+                    value: 0.1,
+                    random: true
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#a0a0d0",
+                    opacity: 0.05,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out"
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "grab"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    }
+                }
+            }
+        });
+
+        const birthDate = new Date('2004-09-27T23:00:00');
+
+        const msPerYear = 365.2425 * 24 * 60 * 60 * 1000;
+
+        const ageDisplayElement = document.getElementById('ageDisplay');
+        const ageIntegerElement = ageDisplayElement.querySelector('.age-integer');
+        const ageDecimalElement = ageDisplayElement.querySelector('.age-decimal');
+
+        const secondsDisplayElement = document.getElementById('secondsDisplay');
+        const secondsIntegerElement = secondsDisplayElement.querySelector('.seconds-integer');
+        const secondsDecimalElement = secondsDisplayElement.querySelector('.seconds-decimal');
+
+        const acceleratingDecimalPosition = 12;
+        const incrementPerSecond = Math.pow(10, -acceleratingDecimalPosition);
+
+        let lastIncrementTime = Date.now();
+        let accumulatedIncrement = 0;
+
+        let initialPerformanceTime = performance.now();
+        let initialDate = Date.now();
+        let lastUpdateTime = initialDate;
+
+        function updateDisplay() {
+            const now = new Date();
+            const currentTime = Date.now();
+
+            document.getElementById('currentDate').textContent =
+                `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+
+            document.getElementById('currentTime').innerHTML =
+                `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} <span class="pulse"></span>`;
+
+            const livedDays = Math.floor((currentTime - birthDate) / (24 * 60 * 60 * 1000));
+            document.getElementById('livedDays').textContent = `${livedDays.toLocaleString()} 天`;
+
+            const trueAge = (currentTime - birthDate.getTime()) / msPerYear;
+
+            const elapsedSinceLastIncrement = currentTime - lastIncrementTime;
+
+            if (elapsedSinceLastIncrement >= 1000) {
+                const fullSeconds = Math.floor(elapsedSinceLastIncrement / 1000);
+                accumulatedIncrement += fullSeconds * incrementPerSecond;
+                lastIncrementTime += fullSeconds * 1000;
+            }
+
+            const displayedAge = trueAge + accumulatedIncrement;
+
+            const formattedAge = displayedAge.toFixed(acceleratingDecimalPosition);
+
+            const ageParts = formattedAge.split('.');
+
+            ageIntegerElement.textContent = ageParts[0];
+            ageDecimalElement.textContent = ageParts[1] || '';
+
+            const elapsedMilliseconds = currentTime - birthDate.getTime();
+            const secondsInteger = Math.floor(elapsedMilliseconds / 1000);
+
+            const highPrecisionNow = performance.now();
+            const highPrecisionElapsed = highPrecisionNow - initialPerformanceTime;
+
+            let fraction = (elapsedMilliseconds % 1000) / 1000;
+            fraction += (highPrecisionElapsed % 1000) / 1000000; // 添加微秒部分
+
+            if (fraction >= 1) {
+                fraction %= 1;
+            }
+
+            const formattedFraction = fraction.toFixed(4).split('.')[1];
+
+            secondsIntegerElement.textContent = secondsInteger.toLocaleString();
+            secondsDecimalElement.textContent = formattedFraction;
+
+            if (currentTime - lastUpdateTime > 60000) {
+                initialPerformanceTime = performance.now();
+                initialDate = Date.now();
+                lastUpdateTime = initialDate;
+            }
+        }
+
+        setInterval(updateDisplay, 10);
+
+        updateDisplay();
+    </script>
+</body>
+
+</html>
